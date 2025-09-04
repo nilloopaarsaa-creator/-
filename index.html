@@ -20,6 +20,16 @@
 </head>
   <body class="bg-gray-900 text-gray-100">
     <div id="root"></div>
+    <script>
+      // This script is for local development ONLY to define the API key.
+      // On hosting platforms like Netlify, you should use their built-in environment variable settings instead.
+      // ❗️ Replace "YOUR_GEMINI_API_KEY" with your actual Gemini API key.
+      window.process = {
+        env: {
+          API_KEY: "YOUR_GEMINI_API_KEY"
+        }
+      };
+    </script>
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
