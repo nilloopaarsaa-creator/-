@@ -178,7 +178,7 @@ const App: React.FC = () => {
             </h1>
           </div>
           <p className="text-lg text-gray-400 mb-6">
-            آمار و خوشه‌های موضوعی کلمات کلیدی را با قدرت هوش مصنوعی دریافت کنید
+            آمار و خوشه‌های موضوعی کلمات کلیدی را با تحلیل پیشرفته دریافت کنید
           </p>
 
           <div className="flex justify-center gap-4 p-1 bg-gray-800 rounded-lg">

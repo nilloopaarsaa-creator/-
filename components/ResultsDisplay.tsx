@@ -39,7 +39,7 @@ const DifficultyStatCard: React.FC<{ value: string; icon: React.ReactNode; }> = 
             <div className="bg-gray-700 p-3 rounded-full mb-4">
                 {icon}
             </div>
-            <h3 className="text-gray-400 text-md font-medium">سختی کلمه کلیدی</h3>
+            <h3 className="text-gray-400 text-md font-medium">سختی</h3>
             {isValid ? (
                 <>
                     <div className="w-full flex items-center justify-between mt-2">
@@ -67,10 +67,10 @@ const IntentStatCard: React.FC<{ value: string; icon: React.ReactNode; }> = ({ v
         <div className="bg-gray-700 p-3 rounded-full mb-4">
             {icon}
         </div>
-        <h3 className="text-gray-400 text-md font-medium">قصد کاربر</h3>
-        <span className="mt-2 text-lg font-semibold bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">
+        <h3 className="text-gray-400 text-md font-medium">قصد کاربر و کاربرد</h3>
+        <p className="mt-2 text-lg font-semibold text-purple-300">
             {value}
-        </span>
+        </p>
     </div>
 );
 
@@ -127,9 +127,9 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ data, sources, onSave }
     <div className="space-y-8 animate-fade-in">
       {/* Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="حجم جستجوی ماهانه" value={data.metrics.searchVolume} icon={<TrendingUpIcon className="w-6 h-6 text-teal-400" />} />
+        <StatCard title="حجم جستجو" value={data.metrics.searchVolume} icon={<TrendingUpIcon className="w-6 h-6 text-teal-400" />} />
         <DifficultyStatCard value={data.metrics.difficulty} icon={<ChartBarIcon className="w-6 h-6 text-yellow-400" />} />
-        <StatCard title="هزینه به ازای هر کلیک (USD)" value={data.metrics.cpc} icon={<CurrencyDollarIcon className="w-6 h-6 text-green-400" />} />
+        <StatCard title="هزینه کلیک (تومان)" value={data.metrics.cpc} icon={<CurrencyDollarIcon className="w-6 h-6 text-green-400" />} />
         <IntentStatCard value={data.metrics.intent} icon={<LightbulbIcon className="w-6 h-6 text-purple-400" />} />
       </div>
 
@@ -138,7 +138,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ data, sources, onSave }
         <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
             <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
                 <AiOverviewIcon className="w-6 h-6 text-yellow-400" />
-                دید کلی AI (خلاصه SERP)
+                دید کلی (خلاصه SERP)
             </h3>
             <p className="text-gray-300 leading-relaxed">
                 {data.aiOverview}
@@ -194,7 +194,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ data, sources, onSave }
         <div className="mb-4">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-400">
                 <SparklesIcon className="w-5 h-5 text-yellow-400" />
-                دسته پیشنهادی هوش مصنوعی
+                دسته پیشنهادی
             </label>
             {isSuggesting ? (
                 <div className="animate-pulse bg-gray-700/50 rounded-lg h-12 mt-2"></div>

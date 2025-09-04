@@ -9,11 +9,12 @@ export const getMainKeywordAnalysis = async (keyword: string): Promise<GenerateC
   const prompt = `
     Provide a detailed SEO analysis for the Persian keyword "${keyword}" targeting the search market in Iran.
     I need the following information in a structured format. Use the exact English labels provided below followed by a colon.
+    For SEARCH_VOLUME, DIFFICULTY, and CPC, provide *only* the value itself (e.g., "1500", "65", "2500") without any extra descriptive text or labels.
 
     SEARCH_VOLUME: [Estimated monthly search volume]
     DIFFICULTY: [SEO keyword difficulty on a 1-100 scale]
-    CPC: [Average Cost Per Click (CPC) in USD, e.g., $0.50]
-    SEARCH_INTENT: [Classify the user's primary search intent. Use one of these Persian labels: اطلاعاتی, ناوبری, تراکنشی, تحقیق تجاری]
+    CPC: [Average Cost Per Click (CPC) in Iranian Toman]
+    SEARCH_INTENT: [Classify the user's primary search intent (e.g., اطلاعاتی, تراکنشی) and then suggest the best placement for it on a website (e.g., ' - مناسب برای پست بلاگ', ' - مناسب برای صفحه محصول'). Combine them into one line.]
     AI_OVERVIEW_START
     [Provide a concise, 2-3 sentence summary explaining the keyword topic, similar to a Google AI Overview. Synthesize information to answer the likely user intent.]
     AI_OVERVIEW_END

@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ClusteringData } from '../types';
 import { clusterKeywordsWithGemini } from '../services/geminiService';
-import { ClusterIcon, UploadIcon } from './Icons';
+import { ClusterIcon } from './Icons';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
 import ClusteringResultsDisplay from './ClusteringResultsDisplay';
@@ -11,42 +11,6 @@ const KeywordClustering: React.FC = () => {
     const [results, setResults] = useState<ClusteringData | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const text = event.target?.result as string;
-            try {
-                const rows = text.split(/\r\n|\n/);
-                if (rows.length < 2) throw new Error("فایل CSV خالی یا نامعتبر است.");
-
-                const header = rows[0].split(',').map(h => h.trim().replace(/"/g, ''));
-                const keywordIndex = header.findIndex(h => h.toLowerCase() === 'keywords');
-
-                if (keywordIndex === -1) {
-                    setError("فایل CSV باید دارای ستونی با نام 'Keywords' باشد.");
-                    return;
-                }
-
-                const keywordsFromFile = rows
-                    .slice(1)
-                    .map(row => (row.split(',')[keywordIndex] || '').trim().replace(/"/g, ''))
-                    .filter(Boolean);
-                
-                setKeywordsInput(keywordsFromFile.join('\n'));
-                setError(null);
-            } catch (parseError) {
-                setError("خطا در پردازش فایل CSV.");
-                console.error(parseError);
-            }
-        };
-        reader.readAsText(file);
-    };
-
 
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
@@ -82,7 +46,7 @@ const KeywordClustering: React.FC = () => {
         <div className="animate-fade-in">
             <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 mb-8">
                 <p className="text-gray-300 text-center">
-                    لیستی از کلمات کلیدی خود را (هر کدام در یک خط) وارد کنید یا یک فایل CSV بارگذاری کنید تا هوش مصنوعی آنها را به گروه‌های موضوعی دسته‌بندی کند.
+                    لیستی از کلمات کلیدی خود را (هر کدام در یک خط) وارد کنید تا ابزار آنها را به گروه‌های موضوعی دسته‌بندی کند.
                 </p>
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -94,44 +58,26 @@ const KeywordClustering: React.FC = () => {
                     disabled={isLoading}
                     rows={10}
                 />
-                 <div className="flex flex-col sm:flex-row gap-3">
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept=".csv"
-                        className="hidden"
-                    />
-                     <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={isLoading}
-                        className="flex w-full sm:w-auto items-center justify-center bg-gray-700 text-gray-300 font-bold py-3 px-6 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-gray-500 transition-all duration-300 disabled:opacity-50"
-                    >
-                        <UploadIcon className="w-6 h-6 ml-2" />
-                        بارگذاری CSV
-                    </button>
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="flex w-full sm:flex-1 items-center justify-center bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:from-teal-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-teal-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-                    >
-                        {isLoading ? (
-                            <>
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                در حال خوشه‌بندی...
-                            </>
-                        ) : (
-                            <>
-                                <ClusterIcon className="w-6 h-6 ml-2" />
-                                شروع خوشه‌بندی
-                            </>
-                        )}
-                    </button>
-                </div>
+                <button
+                    type="submit"
+                    disabled={isLoading || keywordsInput.trim() === ''}
+                    className="flex w-full items-center justify-center bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:from-teal-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-teal-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                >
+                    {isLoading ? (
+                        <>
+                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            در حال خوشه‌بندی...
+                        </>
+                    ) : (
+                        <>
+                            <ClusterIcon className="w-6 h-6 ml-2" />
+                            شروع خوشه‌بندی
+                        </>
+                    )}
+                </button>
             </form>
 
             <div className="mt-8">
